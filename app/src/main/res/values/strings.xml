@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ProjectAkhir_039</string>
+    <string name="onboarding_title">Find your best Collection</string>
+    <string name="onboarding_button">Start</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="search_placeholder">What are you looking for?</string>
+    <string name="recommendation">Recommendation</string>
+    <string name="see_all">See all</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="checkout">Check Out</string>
+</resources>
