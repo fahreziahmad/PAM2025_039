@@ -29,3 +29,17 @@ class CartRepository {
             emptyList() // Jika gagal koneksi, kembalikan list kosong
         }
     }
+
+    // 2. Tambah produk ke keranjang
+    suspend fun addToCart(item: CartItem): CartResponse {
+        return try {
+            ApiClient.apiService.addToCart(
+                nama_sepatu = item.name,
+                harga = item.price,
+                ukuran = item.ukuran, // Pastikan model CartItem sudah punya field ukuran
+                jumlah = item.quantity
+            )
+        } catch (e: Exception) {
+            CartResponse("error", "Koneksi gagal: ${e.message}")
+        }
+    }
