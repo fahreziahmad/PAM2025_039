@@ -223,3 +223,13 @@ fun HalamanDetail(
         }
     }
 }
+
+@Composable
+fun SizeItem(size: Int, isSelected: Boolean, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier.size(38.dp).border(1.dp, if (isSelected) Color.Transparent else Color.LightGray, CircleShape).background(if (isSelected) Color(0xFF9575CD) else Color.Transparent, CircleShape).clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = size.toString(), fontSize = 13.sp, color = if (isSelected) Color.White else Color.Black)
+    }
+}
