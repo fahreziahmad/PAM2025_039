@@ -62,3 +62,33 @@ fun HalamanHome(
     var searchQuery by remember { mutableStateOf("") }
     var showLogoutDialog by remember { mutableStateOf(false) }
     val currentUser by userViewModel.currentUser.collectAsState()
+    Scaffold(
+        topBar = {
+            HomeHeader(
+                name = userName,
+                role = role,
+                cartCount = cartCount,
+                onCartClick = {
+                    // PERBAIKAN: Menambah logika untuk Admin
+                    if (role == "pelanggan") {
+                        navController.navigate(Route.Cart.path)
+                    } else if (role == "admin") {
+                        // Admin akan diarahkan ke halaman daftar pesanan pelanggan
+                        navController.navigate("halaman_admin_orders")
+                    }
+                },
+                onLogoutClick = { showLogoutDialog = true }
+            )
+        },
+        floatingActionButton = {
+            if (role == "admin") {
+                FloatingActionButton(
+                    onClick = { navController.navigate(Route.Entry.path) },
+                    containerColor = Color(0xFF1976D2),
+                    contentColor = Color.White
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Tambah Produk")
+                }
+            }
+        },
+        bottomBar = { BottomNavBar(navController, role) }
