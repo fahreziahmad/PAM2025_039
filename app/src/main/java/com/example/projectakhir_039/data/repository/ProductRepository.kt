@@ -4,43 +4,24 @@ import com.example.projectakhir_039.data.api.ApiClient
 import com.example.projectakhir_039.data.models.Product
 
 class ProductRepository {
-    private val api = ApiClient.instance
-    private var localProducts: List<Product> = emptyList()
+    // Pastikan memanggil ApiClient.apiService secara langsung
+    private val apiService = ApiClient.apiService
 
-    // 1. Memperbaiki error 'getProducts'
     suspend fun getProducts(): List<Product> {
         return try {
-            val response = api.getProducts()
-            if (response.isSuccessful) {
-                localProducts = response.body() ?: emptyList()
-                localProducts
-            } else {
-                emptyList()
-            }
+            apiService.getProducts()
         } catch (e: Exception) {
-            emptyList()
+            e.printStackTrace()
+            emptyList() // Jika error (server mati/RTO), kirim list kosong agar app tidak crash
         }
     }
 
-    // 2. Memperbaiki error 'searchProducts'
-    fun searchProducts(query: String): List<Product> {
-        return localProducts.filter { it.name.contains(query, ignoreCase = true) }
-    }
-
-    // 3. Memperbaiki error 'getProductById'
-    fun getProductById(id: Int): Product? {
-        return localProducts.find { it.id == id }
-    }
-
-    // 4. Memperbaiki error 'addProduct' (Untuk HalamanEntry)
-    suspend fun addProduct(product: Product): Boolean {
-        // Logika kirim ke API XAMPP bisa ditambahkan di sini
-        return true
-    }
-
-    // 5. Memperbaiki error 'updateProduct' (Untuk HalamanEdit)
-    suspend fun updateProduct(product: Product): Boolean {
-        // Logika update ke API XAMPP bisa ditambahkan di sini
-        return true
+    suspend fun searchProducts(query: String): List<Product> {
+        return try {
+            apiService.searchProducts(query)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
     }
 }
