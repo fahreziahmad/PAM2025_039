@@ -154,3 +154,18 @@ fun HalamanProfil(
         }
     }
 }
+
+@Composable
+fun ProfileItem(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, null, tint = Color.Red, modifier = Modifier.size(26.dp))
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(label, color = Color.Gray, fontSize = 12.sp)
+            Text(value, color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        }
+    }
+}
