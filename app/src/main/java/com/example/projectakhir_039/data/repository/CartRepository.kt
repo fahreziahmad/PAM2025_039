@@ -43,3 +43,23 @@ class CartRepository {
             CartResponse("error", "Koneksi gagal: ${e.message}")
         }
     }
+
+    // 3. Update jumlah item keranjang
+    suspend fun updateCartItem(item: CartItem): LoginResponse {
+        return try {
+            // Menggunakan item.id (ID unik di tabel MySQL)
+            ApiClient.apiService.updateCart(item.id, item.quantity)
+        } catch (e: Exception) {
+            LoginResponse("error", e.message ?: "Update Gagal")
+        }
+    }
+
+    // 4. Hapus item dari keranjang
+    suspend fun removeFromCart(cartId: Int): LoginResponse {
+        return try {
+            ApiClient.apiService.deleteCart(cartId)
+        } catch (e: Exception) {
+            LoginResponse("error", e.message ?: "Hapus Gagal")
+        }
+    }
+}
