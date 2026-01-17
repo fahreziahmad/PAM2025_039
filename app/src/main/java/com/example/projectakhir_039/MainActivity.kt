@@ -49,3 +49,114 @@ class MainActivity : ComponentActivity() {
                             onRegisterClick = { navController.navigate(Route.Register.path) }
                         )
                     }
+
+                    // 2. Rute Register - DISESUAIKAN PARAMETERNYA
+                    composable(Route.Register.path) {
+                        HalamanRegister(
+                            onNavigateToLogin = { navController.popBackStack() }
+                        )
+                    }
+                    // MainActivity.kt
+                    composable(
+                        route = "detail/{productId}",
+                        arguments = listOf(navArgument("productId") { type = NavType.IntType }) // Pastikan tipe data INT
+                    ) { backStackEntry ->
+                        val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+
+                        HalamanDetail(
+                            productId = productId,
+                            navController = navController,
+                            productViewModel = productViewModel // Gunakan ViewModel yang sama agar data sinkron
+                        )
+                    }
+
+                    // 3. Rute Home
+                    composable(
+                        route = "home/{role}/{name}",
+                        arguments = listOf(
+                            navArgument("role") { type = NavType.StringType },
+                            navArgument("name") { type = NavType.StringType }
+                        )
+                    ) { backStackEntry ->
+                        val role = backStackEntry.arguments?.getString("role") ?: "pelanggan"
+                        val name = backStackEntry.arguments?.getString("name") ?: "User"
+                        HalamanHome(navController = navController, role = role, userName = name)
+                    }
+
+                    // 4. Rute Katalog
+                    composable("katalog") {
+                        HalamanKatalog(navController = navController, productViewModel = productViewModel)
+                    }
+
+                    // 5. Rute Profil - TAMBAHAN BARU
+                    composable(Route.Profile.path) {
+                        HalamanProfil(
+                            onBack = { navController.popBackStack() },
+                            userVM = userViewModel
+                        )
+                    }
+                    // MainActivity.kt
+                    composable("home/{role}") { backStackEntry ->
+                        val role = backStackEntry.arguments?.getString("role") ?: "pelanggan"
+                        HalamanHome(
+                            navController = navController,
+                            role = role, // Mengirimkan peran ke HalamanHome
+                            productViewModel = productViewModel
+                        )
+                    }
+
+                    // 6. Rute Cart
+                    composable(Route.Cart.path) {
+                        HalamanCart(onBack = { navController.popBackStack() })
+                    }
+
+                    // 7. Rute Tracking
+                    composable(Route.Tracking.path) {
+                        HalamanLacakPesanan(navController = navController)
+                    }
+
+                    // 8. Rute Entry (Tambah Produk)
+                    composable(Route.Entry.path) {
+                        HalamanEntry(
+                            navController = navController,
+                            // PERBAIKAN: Tambahkan parameter onBackClick yang diminta
+                            onBackClick = {
+                                navController.popBackStack()
+                            },
+                            onSaveSuccess = {
+                                // Setelah berhasil simpan, kembali ke halaman sebelumnya
+                                navController.popBackStack()
+                            },
+                            viewModel = productViewModel
+                        )
+                    }
+
+                    // 9. Rute Detail Produk
+                    composable(
+                        route = "detail/{productId}",
+                        arguments = listOf(navArgument("productId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+                        HalamanDetail(productId = productId, navController = navController)
+                    }
+
+                    // 10. Rute Edit Produk
+                    composable(
+                        route = "edit/{productId}",
+                        arguments = listOf(navArgument("productId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+                        HalamanEdit(productId = productId, navController = navController)
+                    }
+                    composable("halaman_admin_orders") {
+                        HalamanAdminOrders(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+
+                }
+            }
+        }
+    }
+}
