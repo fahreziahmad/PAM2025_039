@@ -128,3 +128,40 @@ fun HalamanCart(
         }
     }
 }
+
+@Composable
+fun CartItemCard(item: CartItem, onIncrease: () -> Unit, onDecrease: () -> Unit, onDelete: () -> Unit) {
+    Card(shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F9F9)), modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(item.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                // Menampilkan harga dengan format Rupiah
+                Text(formatRupiah(item.price), color = Color.Gray, fontSize = 12.sp)
+
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 12.dp)) {
+                    IconButton(onClick = onDecrease, modifier = Modifier.size(28.dp).clip(CircleShape).background(Color(0xFFD81B60))) {
+                        Icon(Icons.Default.Remove, "Kurang", tint = Color.White, modifier = Modifier.size(16.dp))
+                    }
+                    Text(item.quantity.toString(), modifier = Modifier.padding(horizontal = 12.dp), fontWeight = FontWeight.Bold)
+                    IconButton(onClick = onIncrease, modifier = Modifier.size(28.dp).clip(CircleShape).background(Color(0xFF42A5F5))) {
+                        Icon(Icons.Default.Add, "Tambah", tint = Color.White, modifier = Modifier.size(16.dp))
+                    }
+                }
+            }
+
+            // Pengecekan ID Gambar agar tidak memicu Resources$NotFoundException
+            val imageRes = if (item.imageResId != 0) item.imageResId else R.drawable.shoes_1
+
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = null,
+                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Fit
+            )
+
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Delete, contentDescription = "Hapus", tint = Color.Red)
+            }
+        }
+    }
+}
