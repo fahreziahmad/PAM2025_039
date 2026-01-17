@@ -65,6 +65,7 @@ dependencies {
     // 4. Coil (Untuk memuat gambar sepatu dari internet/API)
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     // 5. Material Icons Extended (Mockup Anda butuh banyak ikon tambahan)
     implementation("androidx.compose.material:material-icons-extended")
