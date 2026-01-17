@@ -101,3 +101,32 @@ class ProductViewModel : ViewModel() {
             }
         }
     }
+
+    // --- FITUR CRUD (Create, Update, Delete) ---
+
+    fun addProduct(product: Product, onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = ApiClient.apiService.addProduct(
+                    name = product.name,
+                    price = product.price,
+                    description = product.description,
+                    category = product.category,
+                    stock = product.stock
+                )
+
+                if (response.status == "success") {
+                    loadProducts()
+                    onComplete(true)
+                } else {
+                    onComplete(false)
+                }
+            } catch (e: Exception) {
+                Log.e("ProductVM", "Gagal menyimpan: ${e.message}")
+                onComplete(false)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
