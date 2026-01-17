@@ -273,3 +273,16 @@ fun BrandCategories() {
         }
     }
 }
+
+@Composable
+fun PromoBanner() {
+    Box(Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(20.dp))) {
+        Image(painterResource(R.drawable.banner1), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+        Column(Modifier.padding(20.dp).align(Alignment.CenterStart)) {
+            Text("New Collection", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = Color.White)) {
+                Text("Shop Now", color = Color.Black)
+            }
+        }
+    }
+}
