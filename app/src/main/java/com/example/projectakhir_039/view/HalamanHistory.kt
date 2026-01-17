@@ -78,3 +78,48 @@ fun HalamanHistory(
         }
     }
 }
+
+@Composable
+fun OrderHistoryCard(order: Order) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = order.orderNumber,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = order.createdAt,
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+                Divider(Modifier.padding(vertical = 10.dp), thickness = 0.5.dp, color = Color.LightGray)
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Total Pembayaran:", fontSize = 13.sp, color = Color.DarkGray)
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "Rp ${String.format("%,.0f", order.totalPrice)}",
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFFC62828), // Warna merah sesuai desain aplikasi
+                        fontSize = 15.sp
+                    )
+                }
+                Text("Metode: ${order.paymentMethod}", fontSize = 12.sp, color = Color.Gray)
+            }
+
+            // Badge Status Berwarna
+            StatusBadge(status = order.status)
+        }
+    }
+}
