@@ -198,3 +198,44 @@ fun HalamanHome(
         }
     }
 }
+
+// --- Komponen Pendukung Tetap Sama ---
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeHeader(
+    name: String,
+    role: String,
+    cartCount: Int,
+    onCartClick: () -> Unit,
+    onLogoutClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(text = "Welcome Back, $role", fontSize = 12.sp, color = Color.Gray)
+            Text(text = name, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            // PERBAIKAN: Mengganti Ikon berdasarkan Role
+            IconButton(onClick = onCartClick) {
+                Icon(
+                    // Jika role adalah admin, tampilkan ikon Assignment (Daftar Pesanan)
+                    // Jika pelanggan, tampilkan ikon ShoppingCart
+                    imageVector = if (role == "admin") Icons.Default.Assignment else Icons.Default.ShoppingCart,
+                    contentDescription = if (role == "admin") "Pesanan Pelanggan" else "Keranjang Saya",
+                    tint = Color.Black
+                )
+            }
+
+            IconButton(onClick = onLogoutClick) {
+                Icon(Icons.Default.ExitToApp, contentDescription = "Logout", tint = Color.Red)
+            }
+        }
+    }
+}
