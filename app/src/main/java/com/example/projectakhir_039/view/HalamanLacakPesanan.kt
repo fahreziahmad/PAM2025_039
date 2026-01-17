@@ -64,3 +64,40 @@ fun HalamanLacakPesanan(navController: NavHostController) {
         }
     }
 }
+
+@Composable
+fun OrderCard(order: Order) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F9F9))
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Order #${order.id}", fontWeight = FontWeight.Bold)
+
+                val statusColor = when (order.status) {
+                    "Pending" -> Color.Red
+                    "Diproses" -> Color(0xFF42A5F5)
+                    "Dikirim" -> Color(0xFFFFA000)
+                    else -> Color.Green
+                }
+
+                Surface(color = statusColor.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp)) {
+                    Text(
+                        text = order.status,
+                        color = statusColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            // Pastikan memanggil 'totalPrice' dan 'paymentMethod' (tanpa underscore)
+            Text("Total: $${order.totalPrice}", fontWeight = FontWeight.ExtraBold, fontSize = 20.sp)
+            Text("Metode: ${order.paymentMethod}", color = Color.Gray, fontSize = 14.sp)
+            Text("Tanggal: ${order.createdAt}", color = Color.Gray, fontSize = 12.sp)
+        }
+    }
+}
