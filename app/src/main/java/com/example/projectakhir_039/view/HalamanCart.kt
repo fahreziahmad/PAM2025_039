@@ -165,3 +165,11 @@ fun CartItemCard(item: CartItem, onIncrease: () -> Unit, onDecrease: () -> Unit,
         }
     }
 }
+
+@Composable
+fun PriceRow(label: String, value: String, isTotal: Boolean = false) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(label, color = if (isTotal) Color.Black else Color.Gray, fontWeight = if (isTotal) FontWeight.Bold else FontWeight.Normal, fontSize = if (isTotal) 18.sp else 14.sp)
+        Text(value, fontWeight = FontWeight.Bold, fontSize = if (isTotal) 18.sp else 14.sp)
+    }
+}
