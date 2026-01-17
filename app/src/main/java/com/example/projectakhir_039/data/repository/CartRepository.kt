@@ -1,22 +1,31 @@
 package com.example.projectakhir_039.data.repository
 
-import com.example.projectakhir_039.data.models.CartItem // Perbaikan import
+import com.example.projectakhir_039.R
+import com.example.projectakhir_039.data.api.ApiClient
+import com.example.projectakhir_039.data.models.CartItem
+import com.example.projectakhir_039.data.models.CartResponse
+import com.example.projectakhir_039.data.models.LoginResponse
 
 class CartRepository {
-    private val cartItems = mutableListOf<CartItem>()
 
-    fun getCartItems(userId: Int): List<CartItem> = cartItems.filter { it.userId == userId }
+    // 1. Ambil daftar item keranjang dengan Mapping Gambar agar tidak crash
+    suspend fun getCartItems(userId: Int): List<CartItem> {
+        return try {
+            val response = ApiClient.apiService.getCart(userId)
 
-    fun addToCart(cartItem: CartItem) {
-        val existing = cartItems.find { it.productId == cartItem.productId }
-        if (existing != null) {
-            val index = cartItems.indexOf(existing)
-            cartItems[index] = existing.copy(quantity = existing.quantity + cartItem.quantity)
-        } else {
-            cartItems.add(cartItem.copy(id = cartItems.size + 1))
+            // PERBAIKAN FATAL: Memetakan nama sepatu ke drawable agar imageResId tidak 0
+            response.map { item ->
+                item.copy(
+                    imageResId = when {
+                        item.name.contains("Adidas", true) -> R.drawable.shoes_3
+                        item.name.contains("Nike", true) -> R.drawable.shoe_0_5
+                        item.name.contains("Puma", true) -> R.drawable.shoes_2
+                        item.name.contains("futsal", true) -> R.drawable.shoe_0_1
+                        else -> R.drawable.shoes_1 // Gambar default
+                    }
+                )
+            }
+        } catch (e: Exception) {
+            emptyList() // Jika gagal koneksi, kembalikan list kosong
         }
     }
-
-    fun removeFromCart(itemId: Int) { cartItems.removeIf { it.id == itemId } }
-    fun getCartTotal(userId: Int): Double = cartItems.sumOf { it.price * it.quantity }
-}
