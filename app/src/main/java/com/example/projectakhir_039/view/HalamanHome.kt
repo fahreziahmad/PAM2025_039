@@ -239,3 +239,22 @@ fun HomeHeader(
         }
     }
 }
+
+@Composable
+fun SearchBarHome(query: String, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+        placeholder = { Text("Search shoes...") },
+        leadingIcon = { Icon(Icons.Default.Search, null) },
+        shape = RoundedCornerShape(15.dp),
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color(0xFFF5F5F5),
+            unfocusedContainerColor = Color(0xFFF5F5F5),
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent
+        )
+    )
+}
