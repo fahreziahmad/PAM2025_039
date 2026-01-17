@@ -56,3 +56,48 @@ class ProductViewModel : ViewModel() {
         }
     }
 
+    // --- FITUR BARU: TAMBAH KE KERANJANG (MENGHUBUNGKAN KE TOMBOL BUY NOW) ---
+
+    // Cari fungsi addToCart di dalam ProductViewModel.kt dan ubah menjadi ini:
+    fun addToCart(
+        namaSepatu: String,
+        harga: Double,
+        ukuran: Int,
+        jumlah: Int,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                // Memanggil ApiClient dengan nama parameter yang sudah kita samakan di ApiService
+                val response = ApiClient.apiService.addToCart(
+                    nama_sepatu = namaSepatu, // Ini harus sesuai dengan di ApiService
+                    harga = harga,
+                    ukuran = ukuran,
+                    jumlah = jumlah
+                )
+
+                if (response.status == "success") {
+                    onSuccess()
+                } else {
+                    onError(response.message ?: "Gagal menambahkan ke keranjang")
+                }
+            } catch (e: Exception) {
+                Log.e("ProductVM", "Error addToCart: ${e.message}")
+                onError(e.message ?: "Terjadi kesalahan koneksi ke server")
+            }
+        }
+    }
+
+    // --- FITUR PENCARIAN (Bekerja pada list lokal) ---
+    fun searchProducts(query: String) {
+        if (query.isEmpty()) {
+            loadProducts()
+        } else {
+            val currentList = _products.value
+            _products.value = currentList.filter {
+                it.name.contains(query, ignoreCase = true) ||
+                        it.category.contains(query, ignoreCase = true)
+            }
+        }
+    }
