@@ -56,3 +56,43 @@ fun ProductCard(
                 error = painterResource(id = R.drawable.shoes_4)
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = product.name,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                maxLines = 1,
+                fontSize = 14.sp
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = formatRupiah(product.price), // Tampilan baru: Rp 150.000
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+
+                // LOGIKA IKON KATALOG: Menampilkan ShoppingCart untuk Pelanggan
+                IconButton(
+                    onClick = onAction,
+                    modifier = Modifier
+                        .background(Color.Black, RoundedCornerShape(8.dp))
+                        .size(32.dp)
+                ) {
+                    Icon(
+                        // Berubah otomatis berdasarkan variabel 'role'
+                        imageVector = if (role == "admin") Icons.Default.Edit else Icons.Default.ShoppingCart,
+                        contentDescription = "Action Icon",
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        }
+    }
+}
