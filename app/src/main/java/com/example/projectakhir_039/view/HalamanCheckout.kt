@@ -90,3 +90,21 @@ fun HalamanCheckout(
                 )
             }
 
+            Spacer(Modifier.height(24.dp))
+
+            Button(
+                onClick = {
+                    if (address.isNotEmpty()) {
+                        orderViewModel.processCheckout(userId, totalPayment, selectedMethod, address)
+                        // Navigasi ke History menggunakan Route
+                        navController.navigate(Route.History)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Black) // Menyelesaikan error Color
+            ) {
+                Text("Buat Pesanan Sekarang", color = Color.White)
+            }
+        }
+    }
+}
