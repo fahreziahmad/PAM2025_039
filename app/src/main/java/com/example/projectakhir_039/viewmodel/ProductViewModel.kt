@@ -157,3 +157,26 @@ class ProductViewModel : ViewModel() {
             }
         }
     }
+
+    fun deleteProduct(productId: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = ApiClient.apiService.deleteProduct(productId)
+                if (response.status == "success") {
+                    loadProducts()
+                }
+            } catch (e: Exception) {
+                Log.e("ProductVM", "Hapus Gagal: ${e.message}")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun getProductById(id: Int): Product? {
+        val foundProduct = _products.value.find { it.id == id }
+        Log.d("ProductVM", "Mencari ID: $id, Hasil: ${foundProduct?.name ?: "Tidak Ditemukan"}")
+        return foundProduct
+    }
+}
