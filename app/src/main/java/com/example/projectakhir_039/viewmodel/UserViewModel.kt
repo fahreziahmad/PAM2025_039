@@ -77,3 +77,21 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+    fun updateUserData(user: User) {
+        _currentUser.value = user
+    }
+
+    fun logout() {
+        _currentUser.value = null
+        _isLoggedIn.value = false
+    }
+
+    // PERBAIKAN: Menggunakan android.net.Uri sebagai tipe parameter
+    fun updateProfilePhoto(uri: Uri) {
+        val current = _currentUser.value
+        if (current != null) {
+            // Menyimpan URI foto ke dalam field phone (atau field photo jika ada)
+            _currentUser.value = current.copy(phone = uri.toString())
+        }
+    }
+}
