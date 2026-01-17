@@ -51,3 +51,31 @@ class OrderViewModel : ViewModel() {
             }
         }
     }
+
+    fun loadOrders(userId: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.getOrders(userId)
+
+            // DEBUG: Cek di Logcat (pencarian: "ORDER_DEBUG")
+            println("ORDER_DEBUG: Jumlah data yang datang: ${result.size}")
+
+            _orders.value = result
+            _isLoading.value = false
+        }
+    }
+    // Perbaikan fungsi processCheckout di OrderViewModel.kt
+    fun processCheckout(userId: Int, total: Double, method: String, address: String) {
+        viewModelScope.launch {
+            try {
+                // FIX: Tambahkan parameter 'address' di akhir pemanggilan ini
+                val response = ApiClient.apiService.checkout(userId, total, method, address)
+
+                if (response.status == "success") {
+                    // Berhasil membuat pesanan, data sudah tersimpan di tabel orders
+                }
+            } catch (e: Exception) {
+                // Tangani error koneksi atau server
+            }
+        }
+    }
