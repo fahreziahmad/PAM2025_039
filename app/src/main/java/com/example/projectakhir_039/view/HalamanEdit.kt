@@ -175,3 +175,28 @@ fun HalamanEdit(
             }
         }
     }
+
+    // Dialog Konfirmasi Hapus
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Hapus Produk?") },
+            text = { Text("Apakah Anda yakin ingin menghapus '${product?.name}'?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        productViewModel.deleteProduct(productId)
+                        showDeleteDialog = false
+                        navController.popBackStack()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Hapus", color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) { Text("Batal") }
+            }
+        )
+    }
+}
