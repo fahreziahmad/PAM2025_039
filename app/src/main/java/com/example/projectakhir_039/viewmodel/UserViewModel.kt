@@ -50,3 +50,30 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    fun register(name: String, email: String, password: String, phone: String) {
+        viewModelScope.launch {
+            _loading.value = true
+            try {
+                if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+                    val user = User(
+                        id = 2,
+                        name = name,
+                        email = email,
+                        password = password,
+                        phone = phone,
+                        role = "pelanggan", // Default role baru
+                        address = ""
+                    )
+                    _currentUser.value = user
+                    _isLoggedIn.value = true
+                    _error.value = null
+                } else {
+                    _error.value = "Please fill all required fields"
+                }
+            } catch (e: Exception) {
+                _error.value = "Registration failed: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
