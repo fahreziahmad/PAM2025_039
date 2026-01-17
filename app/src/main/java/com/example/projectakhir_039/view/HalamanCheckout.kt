@@ -53,3 +53,40 @@ fun HalamanCheckout(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("Masukkan alamat lengkap...") }
             )
+
+            Spacer(Modifier.height(16.dp))
+
+            Text("Ringkasan Pesanan", fontWeight = FontWeight.Bold)
+            cartItems.forEach { item ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween // Menyelesaikan error Arrangement
+                ) {
+                    Text("${item.name} (x${item.quantity})")
+                    Text("$${String.format("%.2f", item.price * item.quantity)}")
+                }
+            }
+
+            HorizontalDivider(Modifier.padding(vertical = 8.dp)) // Gunakan HorizontalDivider untuk Material 3
+
+            // Rincian Biaya
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Subtotal")
+                Text("$${String.format("%.2f", subtotal)}")
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Ongkos Kirim")
+                Text("$${String.format("%.2f", shippingFee)}")
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Total Pembayaran", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(
+                    text = "$${String.format("%.2f", totalPayment)}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp // Menyelesaikan error sp
+                )
+            }
+
