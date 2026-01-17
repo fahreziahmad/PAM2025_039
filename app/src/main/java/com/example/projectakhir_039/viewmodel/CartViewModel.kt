@@ -1,23 +1,44 @@
 package com.example.projectakhir_039.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.projectakhir_039.data.models.CartItem
 import com.example.projectakhir_039.data.repository.CartRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class CartViewModel : ViewModel() {
     private val repository = CartRepository()
+
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
     val cartItems: StateFlow<List<CartItem>> = _cartItems
 
-    fun loadCart(userId: Int) { _cartItems.value = repository.getCartItems(userId) }
+    // State untuk memantau apakah sedang loading atau ada error
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    fun addToCart(productId: Int, name: String, price: Double, qty: Int, img: String) {
-        repository.addToCart(CartItem(0, productId, name, price, qty, img, 1))
-        loadCart(1)
+    val totalPrice: StateFlow<Double> = _cartItems
+        .map { items -> items.sumOf { it.price * it.quantity } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
+    val cartItemCount: StateFlow<Int> = _cartItems
+        .map { items -> items.sumOf { it.quantity } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+
+    // READ: Memuat data dengan penanganan error agar tidak "mentall"
+    fun loadCart(userId: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Pastikan repository.getCartItems sudah menggunakan try-catch di dalamnya
+                val items = repository.getCartItems(userId)
+                _cartItems.value = items
+            } catch (e: Exception) {
+                Log.e("CartVM", "Gagal memuat keranjang: ${e.message}")
+                _cartItems.value = emptyList()
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
-
-    fun getCartItemCount(): Int = _cartItems.value.sumOf { it.quantity }
-    fun getTotalPrice(): Double = repository.getCartTotal(1)
-}
