@@ -21,3 +21,32 @@ class UserViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    fun login(email: String, password: String) {
+        viewModelScope.launch {
+            _loading.value = true
+            try {
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    // Simulasi data user yang sesuai dengan database Anda
+                    val user = User(
+                        id = 1,
+                        name = "Fahrezi",
+                        email = email,
+                        password = password,
+                        phone = "08123456789",
+                        role = "user", // Sesuai dengan kolom di phpMyAdmin
+                        address = "123 Main Street, Jakarta"
+                    )
+                    _currentUser.value = user
+                    _isLoggedIn.value = true
+                    _error.value = null
+                } else {
+                    _error.value = "Email and password cannot be empty"
+                }
+            } catch (e: Exception) {
+                _error.value = "Login failed: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
