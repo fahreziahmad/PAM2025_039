@@ -133,3 +133,20 @@ fun HalamanDetailPesanan(
         }
     }
 }
+
+@Composable
+fun OrderItemRow(item: OrderItem) {
+    ListItem(
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        headlineContent = { Text(item.name, fontWeight = FontWeight.Bold, fontSize = 15.sp) },
+        supportingContent = { Text("${item.quantity} pasang", fontSize = 13.sp, color = Color.Gray) },
+        trailingContent = {
+            Text(
+                "Rp ${String.format("%,.0f", item.price * item.quantity)}",
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        }
+    )
+    HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray.copy(alpha = 0.5f))
+}
