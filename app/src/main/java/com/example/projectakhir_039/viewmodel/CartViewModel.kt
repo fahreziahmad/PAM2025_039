@@ -42,3 +42,30 @@ class CartViewModel : ViewModel() {
             }
         }
     }
+
+    // UPDATE: Menggunakan cartId agar sinkron dengan database phpMyAdmin
+    fun updateQuantity(cartId: Int, delta: Int, userId: Int = 1) {
+        viewModelScope.launch {
+            try {
+                val currentList = _cartItems.value.toMutableList()
+                val itemIndex = currentList.indexOfFirst { it.id == cartId }
+
+                if (itemIndex != -1) {
+                    val item = currentList[itemIndex]
+                    val newQty = item.quantity + delta
+
+                    if (newQty > 0) {
+                        val updatedItem = item.copy(quantity = newQty)
+                        currentList[itemIndex] = updatedItem
+                        repository.updateCartItem(updatedItem)
+                    } else {
+                        repository.removeFromCart(item.id)
+                        currentList.removeAt(itemIndex)
+                    }
+                    _cartItems.value = currentList
+                }
+            } catch (e: Exception) {
+                Log.e("CartVM", "Gagal update jumlah: ${e.message}")
+            }
+        }
+    }
