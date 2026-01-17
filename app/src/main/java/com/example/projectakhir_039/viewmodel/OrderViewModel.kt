@@ -22,3 +22,19 @@ class OrderViewModel : ViewModel() {
     val orderItems: StateFlow<List<OrderItem>> = _orderItems
     private val _allOrders = MutableStateFlow<List<Order>>(emptyList())
     val allOrders: StateFlow<List<Order>> = _allOrders
+
+    fun loadOrderItems(orderId: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = ApiClient.apiService.getOrderItems(orderId)
+                if (response.status == "success") {
+                    _orderItems.value = response.data
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
