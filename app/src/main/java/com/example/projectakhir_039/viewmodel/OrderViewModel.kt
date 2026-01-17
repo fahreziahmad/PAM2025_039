@@ -38,3 +38,16 @@ class OrderViewModel : ViewModel() {
             }
         }
     }
+
+    fun loadAllOrdersForAdmin() {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.getAllOrders()
+                if (response.status == "success") {
+                    _allOrders.value = response.data
+                }
+            } catch (e: Exception) {
+                Log.e("OrderVM", "Error load admin orders: ${e.message}")
+            }
+        }
+    }
