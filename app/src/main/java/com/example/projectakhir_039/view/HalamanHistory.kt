@@ -123,3 +123,26 @@ fun OrderHistoryCard(order: Order) {
         }
     }
 }
+
+@Composable
+fun StatusBadge(status: String) {
+    val color = when (status.lowercase()) {
+        "success", "selesai" -> Color(0xFF4CAF50)
+        "pending", "menunggu" -> Color(0xFFFF9800)
+        else -> Color(0xFFF44336)
+    }
+
+    Surface(
+        color = color.copy(alpha = 0.1f),
+        shape = RoundedCornerShape(8.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, color)
+    ) {
+        Text(
+            text = status,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            color = color,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
