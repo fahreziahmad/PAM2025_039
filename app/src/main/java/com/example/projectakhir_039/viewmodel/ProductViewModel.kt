@@ -24,3 +24,35 @@ class ProductViewModel : ViewModel() {
     fun loadProducts() {
         loadProductsByCategory("All")
     }
+
+    fun loadProductsByCategory(category: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = ApiClient.apiService.getProducts(category)
+
+                // Tetap menggunakan logika pemetaan gambar Anda
+                val mappedProducts = response.map { product ->
+                    product.copy(
+                        imageResId = when {
+                            product.name.contains("Adidas", true) -> R.drawable.shoes_3
+                            product.name.contains("Nike", true) -> R.drawable.shoe_0_5
+                            product.name.contains("Puma", true) -> R.drawable.shoes_2
+                            product.name.contains("futsal", true) -> R.drawable.shoe_0_1
+                            product.name.contains("Adidas", true) -> R.drawable.shoe_0_2
+                            product.name.contains("Nike", true) -> R.drawable.shoes_2
+                            product.name.contains("Puma", true) -> R.drawable.shoe_0_3
+                            product.name.contains("futsal", true) -> R.drawable.shoes_3
+                            else -> R.drawable.shoes_1
+                        }
+                    )
+                }
+                _products.value = mappedProducts
+            } catch (e: Exception) {
+                _products.value = emptyList()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
