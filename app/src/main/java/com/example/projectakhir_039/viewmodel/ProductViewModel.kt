@@ -130,3 +130,30 @@ class ProductViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateProduct(product: Product, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = ApiClient.apiService.updateProduct(
+                    id = product.id,
+                    name = product.name,
+                    price = product.price,
+                    description = product.description,
+                    stock = product.stock,
+                    category = product.category
+                )
+                if (response.status == "success") {
+                    loadProducts()
+                    onResult(true)
+                } else {
+                    onResult(false)
+                }
+            } catch (e: Exception) {
+                Log.e("ProductVM", "Update Gagal: ${e.message}")
+                onResult(false)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
