@@ -69,3 +69,49 @@ class CartViewModel : ViewModel() {
             }
         }
     }
+
+    // CREATE: Menambah produk baru ke keranjang
+    fun addToCart(productId: Int, name: String, price: Double, qty: Int, ukuran: Int, resId: Int, userId: Int = 1) {
+        viewModelScope.launch {
+            try {
+                // Cek berdasarkan Nama dan Ukuran (karena tabel keranjang Anda mungkin tidak simpan productId)
+                val existingItem = _cartItems.value.find { it.name == name && it.ukuran == ukuran }
+
+                if (existingItem != null) {
+                    // Jika ada, panggil update menggunakan ID unik dari tabel keranjang (id)
+                    updateQuantity(existingItem.id, qty, userId)
+                } else {
+                    val newItem = CartItem(
+                        id = 0, // Database akan mengisi auto-increment
+                        productId = productId,
+                        name = name,
+                        price = price,
+                        quantity = qty,
+                        ukuran = ukuran,
+                        imageResId = resId,
+                        userId = userId
+                    )
+
+                    val response = repository.addToCart(newItem)
+                    if (response.status == "success") {
+                        loadCart(userId) // Segarkan data jika berhasil
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("CartVM", "Gagal tambah ke keranjang: ${e.message}")
+            }
+        }
+    }
+
+    // DELETE: Menghapus item
+    fun removeFromCart(itemId: Int, userId: Int = 1) {
+        viewModelScope.launch {
+            try {
+                repository.removeFromCart(itemId)
+                loadCart(userId)
+            } catch (e: Exception) {
+                Log.e("CartVM", "Gagal menghapus item: ${e.message}")
+            }
+        }
+    }
+}
