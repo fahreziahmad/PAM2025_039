@@ -286,3 +286,36 @@ fun PromoBanner() {
         }
     }
 }
+
+@Composable
+fun BottomNavBar(navController: NavHostController, role: String) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    NavigationBar(containerColor = Color.White) {
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Home, null) },
+            label = { Text("Home") },
+            selected = currentRoute?.startsWith("home") == true,
+            onClick = { navController.navigate("home/$role/Admin") }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.List, contentDescription = "Katalog") }, // Menggunakan ikon List atau Grid
+            label = { Text("Katalog") },
+            selected = false,
+            onClick = { navController.navigate("katalog") }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.LocalShipping, null) },
+            label = { Text("Track") },
+            selected = currentRoute == Route.Tracking.path,
+            onClick = { navController.navigate(Route.Tracking.path) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Person, null) },
+            label = { Text("Profile") },
+            selected = currentRoute == Route.Profile.path,
+            onClick = { navController.navigate(Route.Profile.path) }
+        )
+    }
+}
