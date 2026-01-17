@@ -233,3 +233,9 @@ fun SizeItem(size: Int, isSelected: Boolean, onClick: () -> Unit) {
         Text(text = size.toString(), fontSize = 13.sp, color = if (isSelected) Color.White else Color.Black)
     }
 }
+
+
+@Composable
+fun ColorCircle(color: Color) {
+    Box(modifier = Modifier.size(22.dp).background(color, CircleShape).border(2.dp, Color.White, CircleShape))
+}
