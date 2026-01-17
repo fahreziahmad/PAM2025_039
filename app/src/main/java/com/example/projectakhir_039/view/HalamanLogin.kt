@@ -124,3 +124,55 @@ fun HalamanLogin(
                 )
             }
 
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Tombol Login
+            Button(
+                onClick = {
+                    // Memanggil fungsi login di AuthViewModel
+                    authVM.login(emailOrName, password) { response ->
+                        if (response.status == "success" && response.user != null) {
+                            // MENGIRIM SELURUH DATA USER (NAMA & EMAIL) KE MAINACTIVITY
+                            onSuccess(response.user)
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().height(55.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                contentPadding = PaddingValues(),
+                enabled = !isLoading && emailOrName.isNotEmpty() && password.isNotEmpty()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(Color(0xFFD81B60), Color(0xFF42A5F5)) // Gradien Skena Keren
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                    } else {
+                        Text("Sign In", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Link ke Register
+            Row {
+                Text("Don't have an account? ", color = Color.White)
+                Text(
+                    text = "Register",
+                    color = Color(0xFF42A5F5),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable { onRegisterClick() }
+                )
+            }
+        }
+    }
+}
