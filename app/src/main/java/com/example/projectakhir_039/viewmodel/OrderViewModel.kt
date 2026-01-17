@@ -79,3 +79,32 @@ class OrderViewModel : ViewModel() {
             }
         }
     }
+
+    // Di dalam OrderViewModel.kt
+    // Di dalam class OrderViewModel
+    fun performCheckout(
+        userId: Int,
+        total: Double,
+        method: String,
+        address: String, // TAMBAHKAN parameter ini
+        onResult: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // FIX ERROR BARIS 70: Kirim parameter 'address' ke apiService
+                val response = ApiClient.apiService.checkout(
+                    userId = userId,
+                    total = total,
+                    method = method,
+                    address = address // Tambahkan baris ini
+                )
+                onResult(response.status)
+            } catch (e: Exception) {
+                onResult("error")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+}
