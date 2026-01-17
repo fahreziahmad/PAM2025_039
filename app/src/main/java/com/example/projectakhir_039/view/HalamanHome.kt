@@ -258,3 +258,18 @@ fun SearchBarHome(query: String, onValueChange: (String) -> Unit) {
         )
     )
 }
+
+
+@Composable
+fun BrandCategories() {
+    val brandImages = listOf(R.drawable.cat1, R.drawable.cat2, R.drawable.cat3, R.drawable.cat4, R.drawable.cat5)
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+        items(brandImages) { img ->
+            Surface(shape = RoundedCornerShape(12.dp), color = Color.White, shadowElevation = 2.dp) {
+                Box(Modifier.size(60.dp), contentAlignment = Alignment.Center) {
+                    Image(painterResource(img), null, Modifier.size(40.dp))
+                }
+            }
+        }
+    }
+}
